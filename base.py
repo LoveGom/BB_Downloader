@@ -5,8 +5,6 @@ import tkinter as tk
 #변수 이름은 "홍윤석"씨가 추천해줌 내 의지 아님 ;;
 bybabo = Tk()
 bybabo.title("TEST")
-#bt1 = Button(uwu, padx=30, pady=10, text="버튼1")
-#bt1.pack()
 bybabo.geometry("640x280")
 bybabo.resizable(False, False) 
 
