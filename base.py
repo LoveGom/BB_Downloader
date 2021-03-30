@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import tkinter as tk
 import pytube
-import asyncio
+
 
 #변수 이름은 "홍윤석"씨가 추천해줌 내 의지 아님 ;;
 bybabo = Tk() # 변수 정의 
