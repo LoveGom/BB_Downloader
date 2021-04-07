@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from pytube import YouTube
+from moviepy.editor import *
 import tkinter as tk
 import pytube
 import os
@@ -16,23 +17,38 @@ def resource_path(relative_path):
 
 #변수 이름은 "홍윤석"씨가 추천해줌 내 의지 아님 ;;
 bybabo = Tk() # 변수 정의 
-bybabo.title("BOYEON BABO") # 창 이름 정의
+bybabo.title("BB Downloader") # 창 이름 정의
 bybabo.geometry("240x100") # 창 해상도 정의 
 bybabo.resizable(False, False)  # 창 해상도 변경 금지 
 #bybabo.iconphoto(False, tk.PhotoImage(file=resource_path("./icon.png"))) # 아이콘 정의
 def onclick(): # 버튼을 클릭했을때 
     bt["text"] = "잠시만 기다려요.." # 버튼 이름 바꾸기 
     try:
-        pytube.YouTube(tk.Entry.get(input)).streams.filter(only_audio=True).first().download('./YouTubeDownload')
-        uwu = YouTube(tk.Entry.get(input)).title 
-        uwu = re.sub("[/'*?><|]","", uwu)
-        os.rename(f'.\YoutubeDownload\{uwu}.mp4',f'.\YoutubeDownload\{uwu}.mp3')
-        pytube.YouTube(tk.Entry.get(input)).streams.filter(res="1080p").first().download('./YouTubeDownload')
-        messagebox.showinfo("좋아요!", """다운로드에 성공했어요! 파일은 "./YoutubeDownload" 에 넣어둘께요!""") # 창 띄우기 
+        bt["text"] = "잠시만 기다려요.." # 버튼 이름 바꾸기 
+        pytube.YouTube(tk.Entry.get(input)).streams.filter(only_audio=True).first().download('./BB Download Temp') # 오디오 받기 
+        uwu = YouTube(tk.Entry.get(input)).title # 받은 오디오의 확장자를 변환하기 위해 제목을 가져옴 
+        uwu = re.sub("[/'*?><|]","", uwu) # 제목 필터링 
+        os.rename(f'.\BB Download Temp\{uwu}.mp4',f'.\BB Download Temp\{uwu}.mp3') # 받은 mp4 파일을 mp3로 변환
+        pytube.YouTube(tk.Entry.get(input)).streams.filter(res="1080p").first().download('./BB Download Temp') # 영상 다운로드 
+        videoclip = VideoFileClip(f'.\BB Download Temp\{uwu}.mp4')
+        audioclip = AudioFileClip(f'.\BB Download Temp\{uwu}.mp3')
+        videoclip.audio = audioclip
+        videoclip.write_videofile(f'.\YouTubeDownload\{uwu}.mp4')
+        videoclip.close()
+        audioclip.close()
+        messagebox.showinfo("좋아요!", """다운로드에 성공했어요! 파일은 "./BB Download" 에 넣어둘께요!""") # 창 띄우기 
+        bt["text"] = "슈우웅!"
+    except pytube.exceptions.RegexMatchError:
+        bt["text"] = "이런!"
+        messagebox.showinfo("이런!", """다운로드에 실패했어요..... url을 다시 확인해주세요.....""")
+        bt["text"] = "슈우웅!"
+    except FileExistsError:
+        bt["text"] = "이런!"
+        messagebox.showinfo("이런!", """jkl;""")
         bt["text"] = "슈우웅!"
     except:
         bt["text"] = "이런!"
-        messagebox.showinfo("이런!", """다운로드에 실패했어요..... url을 다시 확인해주세요.....""")
+        messagebox.showinfo("이런!", """알 수 없는 오류가 발생했어요...""")
         bt["text"] = "슈우웅!"
 text = Label(bybabo, text="url을 입력해주세요!") # 텍스트 속성 값
 input = Entry(bybabo) 
