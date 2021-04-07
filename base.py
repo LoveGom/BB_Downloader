@@ -30,23 +30,23 @@ def onclick(): # 버튼을 클릭했을때
         uwu = re.sub("[/'*?><|]","", uwu) # 제목 필터링 
         os.rename(f'.\BB Download Temp\{uwu}.mp4',f'.\BB Download Temp\{uwu}.mp3') # 받은 mp4 파일을 mp3로 변환
         pytube.YouTube(tk.Entry.get(input)).streams.filter(res="1080p").first().download('./BB Download Temp') # 영상 다운로드 
-        videoclip = VideoFileClip(f'.\BB Download Temp\{uwu}.mp4')
-        audioclip = AudioFileClip(f'.\BB Download Temp\{uwu}.mp3')
-        videoclip.audio = audioclip
-        videoclip.write_videofile(f'.\YouTubeDownload\{uwu}.mp4')
-        videoclip.close()
-        audioclip.close()
+        videoclip = VideoFileClip(f'.\BB Download Temp\{uwu}.mp4') # 다운받은 mp4 파일을 영상 대기열에 추가 
+        audioclip = AudioFileClip(f'.\BB Download Temp\{uwu}.mp3') # 다운받은 mp3 파일을 오디오 대기열에 추가
+        videoclip.audio = audioclip # 영상 대기열과 오디오 대기열을 연결 
+        videoclip.write_videofile(f'.\YouTubeDownload\{uwu}.mp4') # 대기열에 있는 영상 파일을 인코딩함
+        videoclip.close() # 메모리에 있는 영상 데이터 초기화
+        audioclip.close() # 메모리에 있는 오디오 데이터 초기화
         messagebox.showinfo("좋아요!", """다운로드에 성공했어요! 파일은 "./BB Download" 에 넣어둘께요!""") # 창 띄우기 
         bt["text"] = "슈우웅!"
-    except pytube.exceptions.RegexMatchError:
+    except pytube.exceptions.RegexMatchError: # pytube 오류 처리
         bt["text"] = "이런!"
         messagebox.showinfo("이런!", """다운로드에 실패했어요..... url을 다시 확인해주세요.....""")
         bt["text"] = "슈우웅!"
-    except FileExistsError:
+    except FileExistsError: # 파일 충돌 처리 내일 자동화 할 예정 
         bt["text"] = "이런!"
-        messagebox.showinfo("이런!", """jkl;""")
+        messagebox.showinfo("이런!", """파일 충돌이 발생했어요 ./BB Downloader Temp 폴더를 지워주세요...""")
         bt["text"] = "슈우웅!"
-    except:
+    except: # 이외 오류 처리
         bt["text"] = "이런!"
         messagebox.showinfo("이런!", """알 수 없는 오류가 발생했어요...""")
         bt["text"] = "슈우웅!"
