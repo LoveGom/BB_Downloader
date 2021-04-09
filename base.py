@@ -22,10 +22,19 @@ bybabo.title("BB Downloader") # 창 이름 정의
 bybabo.geometry("240x100") # 창 해상도 정의 
 bybabo.resizable(False, False)  # 창 해상도 변경 금지 
 #bybabo.iconphoto(False, tk.PhotoImage(file=resource_path("./icon.png"))) # 아이콘 정의
-def uwu():
-    bt["text"] = "다운로드 중..." # 버튼 이름 바꾸기 
-    path = ".\BB Download Temp"
-    download()
+def onclick(): # 버튼을 클릭했을때 
+    bt["text"] = "잠시만 기다려요.." # 버튼 이름 바꾸기 
+    try:
+        bt["text"] = "다운로드 중..." # 버튼 이름 바꾸기 
+        setup()
+    except pytube.exceptions.RegexMatchError: # pytube 오류 처리
+        bt["text"] = "이런!"
+        messagebox.showinfo("이런!", """다운로드에 실패했어요..... url을 다시 확인해주세요.....""")
+        bt["text"] = "슈우웅!"
+    except: # 이외 오류 처리
+        unknownerror()
+
+def setup():
     try:
         shutil.rmtree(r".\BB Download Temp")
         download()
@@ -61,16 +70,7 @@ def unknownerror():
     bt["text"] = "슈우웅!"
     
    
-def onclick(): # 버튼을 클릭했을때 
-    bt["text"] = "잠시만 기다려요.." # 버튼 이름 바꾸기 
-    try:
-        uwu()
-    except pytube.exceptions.RegexMatchError: # pytube 오류 처리
-        bt["text"] = "이런!"
-        messagebox.showinfo("이런!", """다운로드에 실패했어요..... url을 다시 확인해주세요.....""")
-        bt["text"] = "슈우웅!"
-    except: # 이외 오류 처리
-        unknownerror()
+
 
 
 text = Label(bybabo, text="url을 입력해주세요!") # 텍스트 속성 값
