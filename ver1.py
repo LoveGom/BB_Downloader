@@ -9,7 +9,19 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pytube import YouTube
+from moviepy.editor import *
+import pytube
+import os 
+import re 
+import shutil
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -59,7 +71,27 @@ class Ui_MainWindow(object):
         pass
     def mp4ck(self):
         textboxValue = self.textEdit.toPlainText()
-        print(textboxValue)
+        pytube.YouTube(textboxValue).streams.filter(only_audio=True).first().download('./BB Download Temp') # 오디오 받기 
+        uwu = YouTube(textboxValue).title # 받은 오디오의 확장자를 변환하기 위해 제목을 가져옴 
+        uwu = re.sub("[/'*?><|]","", uwu) # 윈도우에서 사용 불가능한 제목 필터링 
+        os.rename(f'.\BB Download Temp\{uwu}.mp4',f'.\BB Download Temp\{uwu}.mp3') # 받은 mp4 파일을 mp3로 변환
+        pytube.YouTube(textboxValue).streams.filter(res="1080p").first().download('./BB Download Temp') # 영상 다운로드 
+        print("encoding..")
+        videoclip = VideoFileClip(f'.\BB Download Temp\{uwu}.mp4')
+        audioclip = AudioFileClip(f'.\BB Download Temp\{uwu}.mp3')
+        videoclip.audio = audioclip
+        path = ".\BB Download"
+        if not os.path.isdir(path):
+            os.mkdir(path)
+        videoclip.write_videofile(f'.\BB Download\{uwu}.mp4')
+        videoclip.close()
+        audioclip.close()
+        shutil.rmtree(r".\BB Download Temp")
+        print("다운로드 성공")
+        #messagebox.showinfo("좋아요!", """다운로드에 성공했어요! 파일은 "./BB Download" 에 넣어둘께요!""") # 창 띄우기 
+        #bt["text"] = "슈우웅!"
+        #textboxValue = self.textEdit.toPlainText()
+        #print(textboxValue)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
